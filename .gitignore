@@ -1,0 +1,29 @@
+# Dependencies
+node_modules/
+
+# Logs
+logs/
+*.log
+
+# Build output
+dist/
+build/
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Editor settings
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Claude AI settings (로컬 전용)
+.claude/
+
+# MCP 설정 (토큰 포함, 로컬 전용)
+.mcp.json
