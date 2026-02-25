@@ -1,29 +1,33 @@
+# MCP 설정 (토큰 포함, 로컬 전용)
+.mcp.json
+
+# Claude AI settings (로컬 전용)
+.claude/
+
 # Dependencies
 node_modules/
+package-lock.json
 
-# Logs
-logs/
-*.log
+# Cache
+.cache/
+.vite/
 
 # Build output
 dist/
-build/
 
 # Environment variables
 .env
 .env.local
 .env.*.local
 
-# Editor settings
-.vscode/
-.idea/
-
 # OS files
 .DS_Store
 Thumbs.db
 
-# Claude AI settings (로컬 전용)
-.claude/
+# IDE settings
+.vscode/
+.idea/
 
-# MCP 설정 (토큰 포함, 로컬 전용)
-.mcp.json
+# Logs
+*.log
+npm-debug.log*
