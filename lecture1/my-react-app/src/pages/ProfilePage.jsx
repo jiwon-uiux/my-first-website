@@ -3,6 +3,7 @@ import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 import ProfileCard from '../components/profile/ProfileCard';
 import ProfileInfo from '../components/profile/ProfileInfo';
+import profileImg from '../assets/profile.jpg';
 
 /**
  * ProfilePage
@@ -39,7 +40,7 @@ function ProfilePage() {
             <Grid size={{ xs: 12, md: 5 }}>
               {/* 프로필 사진: imageSrc에 이미지 경로를 입력하세요 (예: '/profile.jpg') */}
               <ProfileCard
-                imageSrc=''
+                imageSrc={profileImg}
                 imageAlt='프로필 사진'
               />
             </Grid>
