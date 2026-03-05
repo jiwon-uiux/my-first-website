@@ -1,15 +1,23 @@
-import { HashRouter, Routes, Route } from 'react-router-dom';
+import Box from '@mui/material/Box';
 import LandingPage from './pages/LandingPage';
 import ProfilePage from './pages/ProfilePage';
 
 function App() {
   return (
-    <HashRouter>
-      <Routes>
-        <Route path='/' element={<LandingPage />} />
-        <Route path='/profile' element={<ProfilePage />} />
-      </Routes>
-    </HashRouter>
+    <Box
+      sx={{
+        height: '100vh',
+        overflowY: 'scroll',
+        scrollSnapType: 'y mandatory',
+      }}
+    >
+      <Box sx={{ scrollSnapAlign: 'start', height: '100vh' }}>
+        <LandingPage />
+      </Box>
+      <Box sx={{ scrollSnapAlign: 'start', height: '100vh' }}>
+        <ProfilePage />
+      </Box>
+    </Box>
   );
 }
 
