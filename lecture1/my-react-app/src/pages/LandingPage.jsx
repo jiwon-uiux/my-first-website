@@ -11,17 +11,39 @@ import ScrollIndicator from '../components/common/ScrollIndicator';
 function LandingPage() {
   const navigate = useNavigate();
   const isCooling = useRef(false);
+  const touchStartY = useRef(null);
 
   useEffect(() => {
+    const goToProfile = () => {
+      if (isCooling.current) return;
+      isCooling.current = true;
+      navigate('/profile');
+    };
+
     const handleWheel = (e) => {
-      if (e.deltaY > 0 && !isCooling.current) {
-        isCooling.current = true;
-        navigate('/profile');
-      }
+      if (e.deltaY > 0) goToProfile();
+    };
+
+    const handleTouchStart = (e) => {
+      touchStartY.current = e.touches[0].clientY;
+    };
+
+    const handleTouchEnd = (e) => {
+      if (touchStartY.current === null) return;
+      const deltaY = touchStartY.current - e.changedTouches[0].clientY;
+      if (deltaY > 30) goToProfile();
+      touchStartY.current = null;
     };
 
     window.addEventListener('wheel', handleWheel);
-    return () => window.removeEventListener('wheel', handleWheel);
+    window.addEventListener('touchstart', handleTouchStart);
+    window.addEventListener('touchend', handleTouchEnd);
+
+    return () => {
+      window.removeEventListener('wheel', handleWheel);
+      window.removeEventListener('touchstart', handleTouchStart);
+      window.removeEventListener('touchend', handleTouchEnd);
+    };
   }, [navigate]);
 
   return (
