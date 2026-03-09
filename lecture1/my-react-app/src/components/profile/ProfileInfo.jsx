@@ -138,7 +138,7 @@ function ProfileInfo({ name = '이름을 입력해주세요', intro = '성장하
                 letterSpacing: '0.05em',
                 opacity: isVisible ? undefined : 0,
                 animation: isVisible ? `fadeUp 0.4s ease-out ${0.6 + idx * 0.08}s both` : 'none',
-                transition: 'background-color 0.25s ease, border-color 0.25s ease',
+                transition: 'background-color 0.25s ease, border-color 0.25s ease, transform 0.25s ease',
                 '&:hover': {
                   backgroundColor: 'rgba(135, 206, 235, 0.35)',
                   borderColor: '#87CEEB',
