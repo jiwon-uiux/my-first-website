@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Chip from '@mui/material/Chip';
@@ -29,6 +30,21 @@ const CAREERS = [
  */
 function ProfileInfo({ name = '이름을 입력해주세요', intro = '성장하는 웹퍼블리셔' }) {
   const { ref, isVisible } = useScrollReveal({ threshold: 0.1 });
+  const [displayName, setDisplayName] = useState('');
+
+  /** 이름 타이핑 효과: 뷰포트 진입 시 한 글자씩 등장 */
+  useEffect(() => {
+    if (!isVisible) return;
+    let i = 0;
+    const interval = setInterval(() => {
+      setDisplayName(name.slice(0, i + 1));
+      i++;
+      if (i >= name.length) clearInterval(interval);
+    }, 100);
+    return () => clearInterval(interval);
+  }, [isVisible, name]);
+
+  const isTyping = displayName.length < name.length;
 
   return (
     <Box
@@ -40,7 +56,7 @@ function ProfileInfo({ name = '이름을 입력해주세요', intro = '성장하
         transition: 'opacity 0.8s ease-out 0.3s, transform 0.8s ease-out 0.3s',
       }}
     >
-      {/* 이름 */}
+      {/* 이름 - 타이핑 효과 */}
       <Typography
         component='h2'
         sx={{
@@ -49,9 +65,23 @@ function ProfileInfo({ name = '이름을 입력해주세요', intro = '성장하
           letterSpacing: '0.05em',
           color: '#1A2B4A',
           mb: 1,
+          minHeight: { xs: '2.2rem', md: '2.7rem' },
         }}
       >
-        { name }
+        { displayName }
+        <Box
+          component='span'
+          sx={{
+            display: 'inline-block',
+            width: '2px',
+            height: '0.85em',
+            backgroundColor: '#87CEEB',
+            ml: '3px',
+            verticalAlign: 'middle',
+            animation: isTyping ? 'none' : 'cursorBlink 1s step-end infinite',
+            opacity: isTyping ? 1 : undefined,
+          }}
+        />
       </Typography>
 
       {/* 한 줄 소개 */}
@@ -110,7 +140,7 @@ function ProfileInfo({ name = '이름을 입력해주세요', intro = '성장하
           Skills
         </Typography>
         <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-          { SKILLS.map((skill) => (
+          { SKILLS.map((skill, idx) => (
             <Chip
               key={skill}
               label={skill}
@@ -121,7 +151,9 @@ function ProfileInfo({ name = '이름을 입력해주세요', intro = '성장하
                 border: '1px solid rgba(135, 206, 235, 0.4)',
                 fontSize: '0.78rem',
                 letterSpacing: '0.05em',
-                transition: 'all 0.25s ease',
+                opacity: isVisible ? 1 : 0,
+                transform: isVisible ? 'translateY(0)' : 'translateY(12px)',
+                transition: `opacity 0.4s ease-out ${0.6 + idx * 0.08}s, transform 0.4s ease-out ${0.6 + idx * 0.08}s, background-color 0.25s ease, border-color 0.25s ease`,
                 '&:hover': {
                   backgroundColor: 'rgba(135, 206, 235, 0.35)',
                   borderColor: '#87CEEB',
