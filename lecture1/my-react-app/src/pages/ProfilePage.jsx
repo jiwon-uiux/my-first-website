@@ -34,6 +34,11 @@ function ProfilePage() {
             boxShadow: '0 16px 48px rgba(135, 206, 235, 0.2)',
             overflow: 'hidden',
             p: { xs: 2, md: 4 },
+            transition: 'transform 0.3s ease, box-shadow 0.3s ease',
+            '&:hover': {
+              transform: 'translateY(-6px)',
+              boxShadow: '0 28px 64px rgba(135, 206, 235, 0.35)',
+            },
           }}
         >
           <Grid container spacing={2} alignItems='center'>
