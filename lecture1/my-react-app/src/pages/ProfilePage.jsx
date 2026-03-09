@@ -46,7 +46,7 @@ function ProfilePage() {
             </Grid>
             <Grid size={{ xs: 12, md: 7 }}>
               <ProfileInfo
-                name='이름을 입력해주세요'
+                name='김지원'
                 intro='성장하는 웹퍼블리셔입니다'
               />
             </Grid>
