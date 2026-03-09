@@ -1,6 +1,7 @@
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import ProfileCard from '../components/profile/ProfileCard';
 import ProfileInfo from '../components/profile/ProfileInfo';
 import profileImg from '../assets/profile.jpg';
@@ -15,6 +16,7 @@ function ProfilePage() {
       sx={{
         width: '100%',
         minHeight: '100vh',
+        position: 'relative',
         background: 'linear-gradient(135deg, #EEF7FC 0%, #D6EEF8 40%, #B0DCF0 100%)',
         display: 'flex',
         justifyContent: 'center',
@@ -22,6 +24,26 @@ function ProfilePage() {
         py: { xs: 6, md: 8 },
       }}
     >
+      {/* 스크롤 위로 유도 아이콘 */}
+      <Box
+        sx={{
+          position: 'absolute',
+          top: { xs: 20, md: 32 },
+          left: '50%',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          gap: 0.5,
+          color: '#1A2B4A',
+          opacity: 0.7,
+          animation: 'scrollBounceUp 1.5s ease-in-out infinite',
+        }}
+      >
+        <KeyboardArrowUpIcon sx={{ fontSize: '1.5rem' }} />
+        <Box sx={{ fontSize: { xs: '0.65rem', md: '0.72rem' }, letterSpacing: '0.15em', fontWeight: 300 }}>
+          SCROLL
+        </Box>
+      </Box>
       <Container maxWidth='md'>
         {/* 글래스모피즘 카드 */}
         <Box

@@ -46,3 +46,9 @@ html, body {
   0%, 100% { opacity: 1; }
   50% { opacity: 0; }
 }
+
+/* 애니메이션: 스크롤 위로 유도 아이콘 bounce */
+@keyframes scrollBounceUp {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50% { transform: translateX(-50%) translateY(-10px); }
+}
