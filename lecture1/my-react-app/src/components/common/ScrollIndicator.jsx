@@ -22,8 +22,13 @@ function ScrollIndicator() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  const handleClick = () => {
+    document.getElementById('profile')?.scrollIntoView({ behavior: 'smooth' });
+  };
+
   return (
     <Box
+      onClick={handleClick}
       sx={{
         position: 'absolute',
         bottom: { xs: 32, md: 48 },
@@ -38,6 +43,7 @@ function ScrollIndicator() {
         animation: 'scrollBounce 1.5s ease-in-out infinite',
         transition: 'opacity 0.2s ease',
         pointerEvents: opacity === 0 ? 'none' : 'auto',
+        cursor: 'pointer',
       }}
     >
       <Box sx={{ fontSize: { xs: '0.65rem', md: '0.72rem' }, letterSpacing: '0.15em', fontWeight: 300 }}>

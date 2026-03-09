@@ -11,10 +11,10 @@ function App() {
         scrollSnapType: 'y mandatory',
       }}
     >
-      <Box sx={{ scrollSnapAlign: 'start', height: '100vh' }}>
+      <Box id='landing' sx={{ scrollSnapAlign: 'start', height: '100vh' }}>
         <LandingPage />
       </Box>
-      <Box sx={{ scrollSnapAlign: 'start', height: '100vh' }}>
+      <Box id='profile' sx={{ scrollSnapAlign: 'start', height: '100vh' }}>
         <ProfilePage />
       </Box>
     </Box>

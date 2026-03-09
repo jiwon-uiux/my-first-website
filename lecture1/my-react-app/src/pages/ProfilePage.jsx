@@ -26,6 +26,7 @@ function ProfilePage() {
     >
       {/* 스크롤 위로 유도 아이콘 */}
       <Box
+        onClick={() => document.getElementById('landing')?.scrollIntoView({ behavior: 'smooth' })}
         sx={{
           position: 'absolute',
           top: { xs: 20, md: 32 },
@@ -37,6 +38,7 @@ function ProfilePage() {
           color: '#1A2B4A',
           opacity: 0.7,
           animation: 'scrollBounceUp 1.5s ease-in-out infinite',
+          cursor: 'pointer',
         }}
       >
         <KeyboardArrowUpIcon sx={{ fontSize: '1.5rem' }} />
