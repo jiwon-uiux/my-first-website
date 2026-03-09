@@ -44,8 +44,6 @@ function ProfileInfo({ name = '이름을 입력해주세요', intro = '성장하
     return () => clearInterval(interval);
   }, [isVisible, name]);
 
-  const isTyping = displayName.length < name.length;
-
   return (
     <Box
       ref={ref}
@@ -69,19 +67,6 @@ function ProfileInfo({ name = '이름을 입력해주세요', intro = '성장하
         }}
       >
         { displayName }
-        <Box
-          component='span'
-          sx={{
-            display: 'inline-block',
-            width: '2px',
-            height: '0.85em',
-            backgroundColor: '#87CEEB',
-            ml: '3px',
-            verticalAlign: 'middle',
-            animation: isTyping ? 'none' : 'cursorBlink 1s step-end infinite',
-            opacity: isTyping ? 1 : undefined,
-          }}
-        />
       </Typography>
 
       {/* 한 줄 소개 */}
