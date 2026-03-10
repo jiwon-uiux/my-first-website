@@ -5,6 +5,7 @@ import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
 import Chip from '@mui/material/Chip';
 import Divider from '@mui/material/Divider';
 import Switch from '@mui/material/Switch';
@@ -13,6 +14,8 @@ import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import AddIcon from '@mui/icons-material/Add';
+import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
+import CloseIcon from '@mui/icons-material/Close';
 import RatingSection from '../components/ui/RatingSection';
 
 /** 작품 임시 목록 */
@@ -52,6 +55,23 @@ function PostWritePage() {
   const [isSpoiler, setIsSpoiler] = useState(false);
   const [tagInput, setTagInput] = useState('');
   const [tags, setTags] = useState([]);
+  const [images, setImages] = useState([]);
+
+  /** 이미지 파일 선택 */
+  const handleImageChange = (e) => {
+    const files = Array.from(e.target.files);
+    const previews = files.map((file) => ({
+      name: file.name,
+      url: URL.createObjectURL(file),
+    }));
+    setImages((prev) => [...prev, ...previews].slice(0, 5));
+    e.target.value = '';
+  };
+
+  /** 이미지 삭제 */
+  const handleImageRemove = (index) => {
+    setImages((prev) => prev.filter((_, i) => i !== index));
+  };
 
   /** 해시태그 추가 */
   const handleAddTag = () => {
@@ -141,6 +161,57 @@ function PostWritePage() {
               onChange={(e) => setContent(e.target.value)}
               sx={inputSx}
             />
+          </Box>
+
+          {/* 이미지 첨부 */}
+          <Box sx={{ backgroundColor: '#142850', border: '1px solid #27496D', borderRadius: 3, p: 3 }}>
+            <Typography variant='subtitle2' sx={{ color: '#B8C6DB', mb: 1.5 }}>이미지 첨부 (최대 5개)</Typography>
+
+            {/* 이미지 미리보기 */}
+            {images.length > 0 && (
+              <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', mb: 1.5 }}>
+                {images.map((img, idx) => (
+                  <Box
+                    key={idx}
+                    sx={{ position: 'relative', width: 80, height: 80, borderRadius: 2, overflow: 'hidden', border: '1px solid #27496D' }}
+                  >
+                    <Box
+                      component='img'
+                      src={img.url}
+                      alt={img.name}
+                      sx={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                    />
+                    <IconButton
+                      size='small'
+                      onClick={() => handleImageRemove(idx)}
+                      sx={{
+                        position: 'absolute', top: 2, right: 2,
+                        backgroundColor: 'rgba(12,30,53,0.8)', color: '#F7F7F7',
+                        p: '2px', '&:hover': { backgroundColor: '#8B0000' },
+                      }}
+                    >
+                      <CloseIcon sx={{ fontSize: 12 }} />
+                    </IconButton>
+                  </Box>
+                ))}
+              </Box>
+            )}
+
+            {/* 이미지 추가 버튼 */}
+            {images.length < 5 && (
+              <Button
+                component='label'
+                variant='outlined'
+                startIcon={<AddPhotoAlternateIcon />}
+                sx={{
+                  borderColor: '#27496D', color: '#B8C6DB', borderStyle: 'dashed',
+                  '&:hover': { borderColor: '#B8C6DB', backgroundColor: 'rgba(184,198,219,0.05)' },
+                }}
+              >
+                이미지 추가 ({images.length}/5)
+                <input type='file' hidden accept='image/*' multiple onChange={handleImageChange} />
+              </Button>
+            )}
           </Box>
 
           {/* 별점 + 한줄평 */}

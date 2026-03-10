@@ -4,6 +4,7 @@ import LoginPage from './pages/LoginPage';
 import PostListPage from './pages/PostListPage';
 import PostDetailPage from './pages/PostDetailPage';
 import PostWritePage from './pages/PostWritePage';
+import ProfilePage from './pages/ProfilePage';
 
 /** 임시 로그인 사용자 (Supabase 연동 전 Mock) */
 const mockUser = {
@@ -20,6 +21,7 @@ function App() {
           <Route path='/posts' element={<PostListPage />} />
           <Route path='/posts/write' element={<PostWritePage />} />
           <Route path='/posts/:postId' element={<PostDetailPage />} />
+          <Route path='/profile' element={<ProfilePage />} />
         </Routes>
       </Layout>
     </HashRouter>

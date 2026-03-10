@@ -4,17 +4,19 @@ import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
+import Popover from '@mui/material/Popover';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import ReplyIcon from '@mui/icons-material/Reply';
 import VisibilityIcon from '@mui/icons-material/Visibility';
+import AddReactionIcon from '@mui/icons-material/AddReaction';
 
 /** 이모지 반응 옵션 */
-const EMOJI_OPTIONS = ['😂', '😍', '😱', '🔥', '👍', '😭'];
+const EMOJI_OPTIONS = ['😂', '😍', '😱', '🔥', '👍', '😭', '🎬', '💯'];
 
 /**
  * CommentItem 컴포넌트
- * 댓글/대댓글 단위 컴포넌트 (좋아요, 이모지 반응, 대댓글 입력, 스포일러 토글)
+ * 댓글/대댓글 단위 컴포넌트 (좋아요, 이모지 반응 팝오버, 대댓글 입력, 스포일러 토글)
  *
  * Props:
  * @param {object} comment - 댓글 데이터 [Required]
@@ -30,6 +32,7 @@ function CommentItem({ comment, isReply = false, onReply }) {
   const [replyText, setReplyText] = useState('');
   const [spoilerVisible, setSpoilerVisible] = useState(false);
   const [selectedEmoji, setSelectedEmoji] = useState(null);
+  const [emojiAnchor, setEmojiAnchor] = useState(null);
 
   const likeCount = (comment.likes || 0) + (liked ? 1 : 0);
 
@@ -38,6 +41,11 @@ function CommentItem({ comment, isReply = false, onReply }) {
     onReply?.(comment.commentId, replyText.trim());
     setReplyText('');
     setShowReplyInput(false);
+  };
+
+  const handleEmojiSelect = (emoji) => {
+    setSelectedEmoji(selectedEmoji === emoji ? null : emoji);
+    setEmojiAnchor(null);
   };
 
   return (
@@ -51,17 +59,15 @@ function CommentItem({ comment, isReply = false, onReply }) {
         borderLeft: isReply ? '3px solid #B8C6DB' : '1px solid #27496D',
       }}
     >
-      {/* 작성자 + 날짜 */}
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 0.5 }}>
-        <Typography variant='caption' sx={{ color: '#B8C6DB', fontWeight: 600 }}>
-          {comment.emoji && <span style={{ marginRight: 4 }}>{comment.emoji}</span>}
-          {comment.author}
-        </Typography>
-      </Box>
+      {/* 작성자 */}
+      <Typography variant='caption' sx={{ color: '#B8C6DB', fontWeight: 600 }}>
+        {comment.emoji && <span style={{ marginRight: 4 }}>{comment.emoji}</span>}
+        {comment.author}
+      </Typography>
 
       {/* 댓글 내용 (스포일러 처리) */}
       {comment.isSpoiler && !spoilerVisible ? (
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mt: 0.5 }}>
           <Typography variant='body2' sx={{ color: '#B8C6DB', opacity: 0.5, filter: 'blur(4px)', flex: 1 }}>
             {comment.content}
           </Typography>
@@ -75,29 +81,68 @@ function CommentItem({ comment, isReply = false, onReply }) {
           </Button>
         </Box>
       ) : (
-        <Typography variant='body2' sx={{ color: '#F7F7F7', lineHeight: 1.6, mb: 1 }}>
+        <Typography variant='body2' sx={{ color: '#F7F7F7', lineHeight: 1.6, mt: 0.5, mb: 1 }}>
           {comment.content}
         </Typography>
       )}
 
-      {/* 이모지 반응 + 좋아요 + 대댓글 버튼 */}
-      <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, flexWrap: 'wrap', mt: 0.5 }}>
-        {/* 이모지 */}
-        {EMOJI_OPTIONS.map((emoji) => (
-          <Box
-            key={emoji}
-            onClick={() => setSelectedEmoji(selectedEmoji === emoji ? null : emoji)}
-            sx={{
-              fontSize: '1rem',
-              cursor: 'pointer',
-              opacity: selectedEmoji === emoji ? 1 : 0.4,
-              transition: 'opacity 0.2s, transform 0.2s',
-              '&:hover': { opacity: 1, transform: 'scale(1.2)' },
-            }}
-          >
-            {emoji}
+      {/* 액션 바: 이모지 버튼 + 선택된 이모지 + 좋아요 + 답글 */}
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, mt: 0.5 }}>
+
+        {/* 이모지 반응 버튼 */}
+        <IconButton
+          size='small'
+          onClick={(e) => setEmojiAnchor(e.currentTarget)}
+          sx={{
+            p: 0.3,
+            color: selectedEmoji ? '#F7F7F7' : '#B8C6DB',
+            backgroundColor: selectedEmoji ? 'rgba(184,198,219,0.15)' : 'transparent',
+            borderRadius: 1,
+            '&:hover': { backgroundColor: 'rgba(184,198,219,0.1)' },
+          }}
+        >
+          {selectedEmoji
+            ? <Typography sx={{ fontSize: '1rem', lineHeight: 1 }}>{selectedEmoji}</Typography>
+            : <AddReactionIcon sx={{ fontSize: 16 }} />
+          }
+        </IconButton>
+
+        {/* 이모지 팝오버 */}
+        <Popover
+          open={Boolean(emojiAnchor)}
+          anchorEl={emojiAnchor}
+          onClose={() => setEmojiAnchor(null)}
+          anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
+          transformOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+          PaperProps={{
+            sx: {
+              backgroundColor: '#142850',
+              border: '1px solid #27496D',
+              borderRadius: 2,
+              p: 1,
+            },
+          }}
+        >
+          <Box sx={{ display: 'flex', gap: 0.5 }}>
+            {EMOJI_OPTIONS.map((emoji) => (
+              <Box
+                key={emoji}
+                onClick={() => handleEmojiSelect(emoji)}
+                sx={{
+                  fontSize: '1.3rem',
+                  cursor: 'pointer',
+                  p: '4px',
+                  borderRadius: 1,
+                  backgroundColor: selectedEmoji === emoji ? 'rgba(184,198,219,0.2)' : 'transparent',
+                  transition: 'transform 0.15s, background-color 0.15s',
+                  '&:hover': { transform: 'scale(1.3)', backgroundColor: 'rgba(184,198,219,0.15)' },
+                }}
+              >
+                {emoji}
+              </Box>
+            ))}
           </Box>
-        ))}
+        </Popover>
 
         <Box sx={{ flex: 1 }} />
 
@@ -112,7 +157,7 @@ function CommentItem({ comment, isReply = false, onReply }) {
           <Typography variant='caption' sx={{ color: '#B8C6DB', fontSize: '0.7rem' }}>{likeCount}</Typography>
         </Box>
 
-        {/* 대댓글 버튼 (대댓글에는 표시 안 함) */}
+        {/* 답글 버튼 (대댓글에는 표시 안 함) */}
         {!isReply && (
           <Button
             size='small'

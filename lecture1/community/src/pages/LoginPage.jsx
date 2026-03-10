@@ -24,10 +24,14 @@ function LoginPage() {
   const [error, setError] = useState('');
   const [showNicknameModal, setShowNicknameModal] = useState(false);
 
-  /** 소셜 로그인 → 바로 메인으로 이동 */
+  /** 소셜 로그인 → 로그인 탭이면 바로 메인, 회원가입 탭이면 닉네임 설정 모달 */
   const handleSocialLogin = (provider) => {
-    console.log(`${provider} 로그인`);
-    navigate('/posts');
+    console.log(`${provider} ${tab === 0 ? '로그인' : '회원가입'}`);
+    if (tab === 1) {
+      setShowNicknameModal(true);
+    } else {
+      navigate('/posts');
+    }
   };
 
   /** 이메일 로그인 */
