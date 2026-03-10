@@ -27,13 +27,31 @@ jobs:
           cache: 'npm'
           cache-dependency-path: lecture1/my-react-app/package-lock.json
 
-      - name: Install dependencies
+      # my-react-app 빌드
+      - name: Install dependencies (my-react-app)
         run: npm ci
         working-directory: ./lecture1/my-react-app
 
-      - name: Build
+      - name: Build (my-react-app)
         run: npm run build
         working-directory: ./lecture1/my-react-app
+
+      # community 빌드
+      - name: Install dependencies (community)
+        run: npm ci
+        working-directory: ./lecture1/community
+
+      - name: Build (community)
+        run: npm run build
+        working-directory: ./lecture1/community
+
+      # 두 빌드 결과물 합치기
+      - name: Merge build outputs
+        run: |
+          mkdir -p ./dist
+          cp -r ./lecture1/my-react-app/dist/. ./dist/
+          mkdir -p ./dist/community
+          cp -r ./lecture1/community/dist/. ./dist/community/
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
@@ -41,7 +59,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: './lecture1/my-react-app/dist'
+          path: './dist'
 
       - name: Deploy to GitHub Pages
         id: deployment
