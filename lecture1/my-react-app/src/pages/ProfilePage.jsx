@@ -1,3 +1,5 @@
+import { useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
@@ -9,8 +11,43 @@ import profileImg from '../assets/profile.jpg';
 /**
  * ProfilePage
  * 2페이지: 글래스모피즘 프로필 카드 + 정보
+ * 페이지 최상단에서 위로 스크롤 시 1페이지(/)로 이동
  */
 function ProfilePage() {
+  const navigate = useNavigate();
+  const touchStartY = useRef(null);
+
+  useEffect(() => {
+    const handleWheel = (e) => {
+      if (window.scrollY === 0 && e.deltaY < 0) {
+        navigate('/');
+      }
+    };
+
+    const handleTouchStart = (e) => {
+      touchStartY.current = e.touches[0].clientY;
+    };
+
+    const handleTouchEnd = (e) => {
+      if (touchStartY.current === null) return;
+      const deltaY = touchStartY.current - e.changedTouches[0].clientY;
+      if (window.scrollY === 0 && deltaY < -30) {
+        navigate('/');
+      }
+      touchStartY.current = null;
+    };
+
+    window.addEventListener('wheel', handleWheel);
+    window.addEventListener('touchstart', handleTouchStart);
+    window.addEventListener('touchend', handleTouchEnd);
+
+    return () => {
+      window.removeEventListener('wheel', handleWheel);
+      window.removeEventListener('touchstart', handleTouchStart);
+      window.removeEventListener('touchend', handleTouchEnd);
+    };
+  }, [navigate]);
+
   return (
     <Box
       sx={{
