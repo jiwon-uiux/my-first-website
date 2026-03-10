@@ -1,15 +1,19 @@
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Chip from '@mui/material/Chip';
+import Button from '@mui/material/Button';
 import StarIcon from '@mui/icons-material/Star';
 import FavoriteIcon from '@mui/icons-material/Favorite';
+import VisibilityIcon from '@mui/icons-material/Visibility';
 
 /**
  * PostCard 컴포넌트
  * 게시물 목록에서 사용하는 카드 UI
+ * isSpoiler=true 시 제목 블러 + "스포일러 보기" 버튼 표시
  *
  * Props:
  * @param {number} postId - 게시물 고유 번호 [Required]
@@ -37,10 +41,20 @@ function PostCard({
   posterUrl = null,
 }) {
   const navigate = useNavigate();
+  const [spoilerRevealed, setSpoilerRevealed] = useState(false);
+
+  const handleCardClick = () => {
+    navigate(`/posts/${postId}`);
+  };
+
+  const handleRevealSpoiler = (e) => {
+    e.stopPropagation();
+    setSpoilerRevealed(true);
+  };
 
   return (
     <Card
-      onClick={() => navigate(`/posts/${postId}`)}
+      onClick={handleCardClick}
       sx={{
         height: '100%',
         cursor: 'pointer',
@@ -99,22 +113,56 @@ function PostCard({
           )}
         </Box>
 
-        {/* 제목 */}
-        <Typography
-          variant='body2'
-          sx={{
-            color: '#F7F7F7',
-            fontWeight: 600,
-            mb: 1,
-            display: '-webkit-box',
-            WebkitLineClamp: 2,
-            WebkitBoxOrient: 'vertical',
-            overflow: 'hidden',
-            lineHeight: 1.4,
-          }}
-        >
-          {title}
-        </Typography>
+        {/* 제목 — 스포일러 시 블러 처리 */}
+        <Box sx={{ position: 'relative', mb: 1 }}>
+          <Typography
+            variant='body2'
+            sx={{
+              color: '#F7F7F7',
+              fontWeight: 600,
+              display: '-webkit-box',
+              WebkitLineClamp: 2,
+              WebkitBoxOrient: 'vertical',
+              overflow: 'hidden',
+              lineHeight: 1.4,
+              filter: isSpoiler && !spoilerRevealed ? 'blur(5px)' : 'none',
+              userSelect: isSpoiler && !spoilerRevealed ? 'none' : 'auto',
+              transition: 'filter 0.3s',
+            }}
+          >
+            {title}
+          </Typography>
+
+          {/* 스포일러 보기 버튼 오버레이 */}
+          {isSpoiler && !spoilerRevealed && (
+            <Box
+              sx={{
+                position: 'absolute',
+                inset: 0,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              <Button
+                size='small'
+                startIcon={<VisibilityIcon sx={{ fontSize: 12 }} />}
+                onClick={handleRevealSpoiler}
+                sx={{
+                  color: '#F7F7F7',
+                  backgroundColor: 'rgba(12,30,53,0.85)',
+                  border: '1px solid #27496D',
+                  fontSize: '0.65rem',
+                  py: 0.3,
+                  px: 1,
+                  '&:hover': { backgroundColor: 'rgba(39,73,109,0.9)' },
+                }}
+              >
+                스포일러 보기
+              </Button>
+            </Box>
+          )}
+        </Box>
 
         {/* 작성자 */}
         <Typography variant='caption' sx={{ color: '#B8C6DB', opacity: 0.6, display: 'block', mb: 1 }}>
@@ -126,18 +174,14 @@ function PostCard({
           {rating !== null ? (
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
               <StarIcon sx={{ color: '#FFD700', fontSize: 16 }} />
-              <Typography variant='caption' sx={{ color: '#B8C6DB' }}>
-                {rating}
-              </Typography>
+              <Typography variant='caption' sx={{ color: '#B8C6DB' }}>{rating}</Typography>
             </Box>
           ) : (
             <Box />
           )}
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
             <FavoriteIcon sx={{ color: '#E57373', fontSize: 16 }} />
-            <Typography variant='caption' sx={{ color: '#B8C6DB' }}>
-              {likes}
-            </Typography>
+            <Typography variant='caption' sx={{ color: '#B8C6DB' }}>{likes}</Typography>
           </Box>
         </Box>
       </CardContent>

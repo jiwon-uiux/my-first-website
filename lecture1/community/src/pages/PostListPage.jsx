@@ -1,5 +1,5 @@
-import { useState, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useMemo, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
@@ -32,15 +32,7 @@ const GENRE_OPTIONS = [
   { value: '코미디', label: '코미디' },
 ];
 
-/** 임시 Mock 게시물 데이터 (Supabase 연동 전) */
-const MOCK_POSTS = [
-  { postId: 1, title: '파묘 정말 무서웠어요 - 스포 없는 후기', author: '달빛영화팬', rating: 4.5, likes: 128, contentType: 'movie', genre: '공포', isSpoiler: false },
-  { postId: 2, title: '눈물의 여왕 16화 결말 이야기해요', author: '드라마중독자', rating: 5, likes: 342, contentType: 'drama', genre: '로맨스', isSpoiler: true },
-  { postId: 3, title: '듄 파트2 IMAX로 봐야하는 이유', author: '시네마탐험가', rating: 4, likes: 87, contentType: 'movie', genre: 'SF', isSpoiler: false },
-  { postId: 4, title: '선재 업고 튀어 OST 추천', author: '봄날의드라마', rating: 5, likes: 256, contentType: 'drama', genre: '로맨스', isSpoiler: false },
-  { postId: 5, title: '범죄도시4 역대급 액션씬 모음', author: '마동석팬클럽', rating: 4, likes: 199, contentType: 'movie', genre: '액션', isSpoiler: false },
-  { postId: 6, title: '이번 주 드라마 뭐 볼지 투표해요', author: '드라마고민러', rating: null, likes: 45, contentType: 'drama', genre: '드라마', isSpoiler: false },
-];
+import { MOCK_POSTS } from '../data/mockData';
 
 /** 탭별 정렬 함수 */
 const SORT_BY = {
@@ -55,20 +47,31 @@ const SORT_BY = {
  */
 function PostListPage() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [tabValue, setTabValue] = useState(0);
   const [contentType, setContentType] = useState('all');
   const [genre, setGenre] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
+
+  /** URL ?tag= 쿼리 파라미터로 해시태그 검색 자동 적용 */
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const tag = params.get('tag');
+    if (tag) setSearchQuery(`#${tag}`);
+  }, [location.search]);
 
   /** 필터링 + 정렬된 게시물 목록 */
   const filteredPosts = useMemo(() => {
     return MOCK_POSTS.filter((post) => {
       const matchType = contentType === 'all' || post.contentType === contentType;
       const matchGenre = genre === 'all' || post.genre === genre;
+      const isHashtagSearch = searchQuery.startsWith('#');
+      const keyword = isHashtagSearch ? searchQuery.slice(1).toLowerCase() : searchQuery.toLowerCase();
       const matchSearch =
         !searchQuery ||
-        post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        post.author.toLowerCase().includes(searchQuery.toLowerCase());
+        (isHashtagSearch
+          ? post.hashtags?.some((t) => t.toLowerCase().includes(keyword))
+          : post.title.toLowerCase().includes(keyword) || post.author.toLowerCase().includes(keyword));
       return matchType && matchGenre && matchSearch;
     }).sort(SORT_BY[tabValue]);
   }, [contentType, genre, searchQuery, tabValue]);
@@ -82,7 +85,7 @@ function PostListPage() {
           fullWidth
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          placeholder='작품명 또는 제목으로 검색'
+          placeholder='제목, 작품명 또는 #해시태그로 검색'
           variant='outlined'
           sx={{
             mb: 2,
@@ -151,7 +154,7 @@ function PostListPage() {
         )}
       </Container>
 
-      {/* 모바일용 글쓰기 FAB */}
+      {/* 글쓰기 FAB (항상 표시) */}
       <Fab
         onClick={() => navigate('/posts/write')}
         sx={{
@@ -160,11 +163,14 @@ function PostListPage() {
           right: 24,
           backgroundColor: '#B8C6DB',
           color: '#0C1E35',
-          display: { xs: 'flex', sm: 'none' },
-          '&:hover': { backgroundColor: '#F7F7F7' },
+          width: 60,
+          height: 60,
+          boxShadow: '0 4px 20px rgba(0,0,0,0.4)',
+          '&:hover': { backgroundColor: '#F7F7F7', transform: 'scale(1.05)' },
+          transition: 'transform 0.2s',
         }}
       >
-        <AddIcon />
+        <AddIcon sx={{ fontSize: 28 }} />
       </Fab>
     </Box>
   );
