@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import ProfileCard from '../components/profile/ProfileCard';
 import ProfileInfo from '../components/profile/ProfileInfo';
 import profileImg from '../assets/profile.jpg';
@@ -22,7 +22,7 @@ function ProfilePage() {
     const timer = setTimeout(() => { ready.current = true; }, 500);
 
     const handleWheel = (e) => {
-      if (ready.current && window.scrollY === 0 && e.deltaY < -30) {
+      if (ready.current && e.deltaY > 30) {
         navigate('/');
       }
     };
@@ -34,7 +34,7 @@ function ProfilePage() {
     const handleTouchEnd = (e) => {
       if (touchStartY.current === null) return;
       const deltaY = touchStartY.current - e.changedTouches[0].clientY;
-      if (ready.current && window.scrollY === 0 && deltaY < -30) {
+      if (ready.current && deltaY > 30) {
         navigate('/');
       }
       touchStartY.current = null;
@@ -65,24 +65,25 @@ function ProfilePage() {
         py: { xs: 6, md: 8 },
       }}
     >
-      {/* 스크롤 위로 유도 아이콘 */}
+      {/* 스크롤 아래로 유도 아이콘 */}
       <Box
         onClick={() => navigate('/')}
         sx={{
           position: 'absolute',
-          top: { xs: 20, md: 32 },
+          bottom: { xs: 20, md: 32 },
           left: '50%',
+          transform: 'translateX(-50%)',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
           gap: 0.5,
           color: '#1A2B4A',
           opacity: 0.7,
-          animation: 'scrollBounceUp 1.5s ease-in-out infinite',
+          animation: 'scrollBounce 1.5s ease-in-out infinite',
           cursor: 'pointer',
         }}
       >
-        <KeyboardArrowUpIcon sx={{ fontSize: '1.5rem' }} />
+        <KeyboardArrowDownIcon sx={{ fontSize: '1.5rem' }} />
         <Box sx={{ fontSize: { xs: '0.65rem', md: '0.72rem' }, letterSpacing: '0.15em', fontWeight: 300 }}>
           SCROLL
         </Box>

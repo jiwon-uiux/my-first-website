@@ -29,7 +29,7 @@ function LoginPage() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    navigate('/');
+    navigate('/profile');
   };
 
   return (
@@ -115,7 +115,7 @@ function LoginPage() {
                 variant="contained"
                 size="large"
                 fullWidth
-                onClick={() => navigate('/')}
+                onClick={() => navigate('/profile')}
                 sx={{
                   backgroundColor: '#FEE500',
                   color: '#191919',
@@ -130,7 +130,7 @@ function LoginPage() {
                 variant="outlined"
                 size="large"
                 fullWidth
-                onClick={() => navigate('/')}
+                onClick={() => navigate('/profile')}
                 sx={{
                   borderColor: '#dadce0',
                   color: '#3c4043',
