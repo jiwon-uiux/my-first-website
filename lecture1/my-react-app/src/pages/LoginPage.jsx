@@ -4,6 +4,7 @@ import {
   Box,
   Button,
   Container,
+  Divider,
   Paper,
   Stack,
   TextField,
@@ -103,6 +104,54 @@ function LoginPage() {
                 </Button>
               </Stack>
             </Box>
+
+            <Divider>
+              <Typography variant="body2" color="text.secondary">
+                또는 SNS로 로그인
+              </Typography>
+            </Divider>
+
+            <Stack spacing={1.5}>
+              <Button
+                variant="contained"
+                size="large"
+                fullWidth
+                onClick={() => console.log('카카오 로그인')}
+                sx={{
+                  backgroundColor: '#FEE500',
+                  color: '#191919',
+                  '&:hover': { backgroundColor: '#e6cf00' },
+                }}
+                startIcon={
+                  <Box component="span" sx={{ fontSize: '1.1rem', lineHeight: 1 }}>
+                    💬
+                  </Box>
+                }
+              >
+                카카오로 로그인
+              </Button>
+
+              <Button
+                variant="outlined"
+                size="large"
+                fullWidth
+                onClick={() => console.log('구글 로그인')}
+                sx={{
+                  borderColor: '#dadce0',
+                  color: '#3c4043',
+                  '&:hover': { backgroundColor: '#f8f9fa', borderColor: '#dadce0' },
+                }}
+                startIcon={
+                  <Box
+                    component="img"
+                    src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
+                    sx={{ width: 18, height: 18 }}
+                  />
+                }
+              >
+                Google로 로그인
+              </Button>
+            </Stack>
           </Stack>
         </Paper>
       </Container>
