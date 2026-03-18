@@ -34,6 +34,15 @@ const inputSx = {
   '& .MuiInputLabel-root': { color: '#B8C6DB' },
 };
 
+/** 임시 친구 목록 */
+const MOCK_FRIENDS = [
+  { id: 1, nickname: '영화광123', bio: '공포영화 마니아 🎃', profileImageUrl: null },
+  { id: 2, nickname: '시네마러버', bio: '매주 극장 방문 중 🎬', profileImageUrl: null },
+  { id: 3, nickname: '드라마중독자', bio: '드라마 없인 못 살아 📺', profileImageUrl: null },
+  { id: 4, nickname: '봄날의드라마', bio: '로맨스 전문 리뷰어 🌸', profileImageUrl: null },
+  { id: 5, nickname: '달빛소녀', bio: '밤마다 영화 한 편 🌙', profileImageUrl: null },
+];
+
 /** 임시 별점 내역 */
 const MOCK_RATINGS = [
   { workId: 1, title: '파묘', contentType: 'movie', rating: 4, shortReview: '한국 공포영화의 새 시대' },
@@ -57,6 +66,7 @@ function ProfilePage() {
     friendCount: 34,
   });
   const [isEditOpen, setIsEditOpen] = useState(false);
+  const [isFriendsOpen, setIsFriendsOpen] = useState(false);
   const [editNickname, setEditNickname] = useState('');
   const [editBio, setEditBio] = useState('');
   const [editImageUrl, setEditImageUrl] = useState(null);
@@ -157,9 +167,12 @@ function ProfilePage() {
                 </Typography>
                 <Typography variant='caption' sx={{ color: '#B8C6DB', opacity: 0.6 }}>별점</Typography>
               </Box>
-              <Box sx={{ textAlign: 'center' }}>
+              <Box
+                sx={{ textAlign: 'center', cursor: 'pointer', '&:hover opacity': 0.8 }}
+                onClick={() => setIsFriendsOpen(true)}
+              >
                 <Typography variant='h6' sx={{ color: '#F7F7F7', fontWeight: 700, lineHeight: 1 }}>
-                  {user.friendCount}
+                  {MOCK_FRIENDS.length}
                 </Typography>
                 <Typography variant='caption' sx={{ color: '#B8C6DB', opacity: 0.6 }}>친구</Typography>
               </Box>
@@ -252,6 +265,66 @@ function ProfilePage() {
               }}
             >
               저장
+            </Button>
+          </DialogActions>
+        </Dialog>
+
+        {/* 친구 목록 다이얼로그 */}
+        <Dialog
+          open={isFriendsOpen}
+          onClose={() => setIsFriendsOpen(false)}
+          PaperProps={{
+            sx: {
+              backgroundColor: '#142850',
+              border: '1px solid #27496D',
+              borderRadius: 3,
+              minWidth: { xs: 300, sm: 400 },
+            },
+          }}
+        >
+          <DialogTitle sx={{ color: '#F7F7F7', fontWeight: 700, pb: 1 }}>
+            친구 목록
+          </DialogTitle>
+          <DialogContent sx={{ pt: '8px !important', pb: 1 }}>
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+              {MOCK_FRIENDS.map((friend) => (
+                <Box
+                  key={friend.id}
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 1.5,
+                    p: 1.5,
+                    borderRadius: 2,
+                    border: '1px solid #27496D',
+                    backgroundColor: '#0C1E35',
+                  }}
+                >
+                  <Avatar
+                    src={friend.profileImageUrl || undefined}
+                    sx={{ width: 40, height: 40, backgroundColor: '#27496D', fontSize: '1rem' }}
+                  >
+                    {friend.nickname[0]}
+                  </Avatar>
+                  <Box>
+                    <Typography variant='body2' sx={{ color: '#F7F7F7', fontWeight: 600 }}>
+                      {friend.nickname}
+                    </Typography>
+                    <Typography variant='caption' sx={{ color: '#B8C6DB', opacity: 0.7 }}>
+                      {friend.bio}
+                    </Typography>
+                  </Box>
+                </Box>
+              ))}
+            </Box>
+          </DialogContent>
+          <DialogActions sx={{ px: 3, pb: 2 }}>
+            <Button
+              onClick={() => setIsFriendsOpen(false)}
+              variant='outlined'
+              sx={{ borderColor: '#27496D', color: '#B8C6DB', '&:hover': { borderColor: '#B8C6DB' } }}
+            >
+              닫기
             </Button>
           </DialogActions>
         </Dialog>
