@@ -1,5 +1,7 @@
-import { Box, Container, Typography } from '@mui/material';
+import { Box, Container, Divider, Typography } from '@mui/material';
 import Section01Buttons from './components/sections/Section01Buttons';
+import Section02Input from './components/sections/Section02Input';
+import Section03Dropdown from './components/sections/Section03Dropdown';
 
 function App() {
   return (
@@ -13,6 +15,10 @@ function App() {
         </Typography>
 
         <Section01Buttons />
+        <Divider sx={{ mb: 6 }} />
+        <Section02Input />
+        <Divider sx={{ mb: 6 }} />
+        <Section03Dropdown />
       </Container>
     </Box>
   );
