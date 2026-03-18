@@ -1,7 +1,5 @@
 import { Box, Container, Typography } from '@mui/material';
-
-// 섹션 컴포넌트들을 여기에 import해서 추가하세요
-// import Section01 from './components/sections/Section01';
+import Section01Buttons from './components/sections/Section01Buttons';
 
 function App() {
   return (
@@ -14,8 +12,7 @@ function App() {
           16개 UI 요소를 순차적으로 추가합니다.
         </Typography>
 
-        {/* 섹션 컴포넌트들이 여기에 추가됩니다 */}
-        {/* <Section01 /> */}
+        <Section01Buttons />
       </Container>
     </Box>
   );
