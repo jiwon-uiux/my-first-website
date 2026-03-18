@@ -16,10 +16,13 @@ import profileImg from '../assets/profile.jpg';
 function ProfilePage() {
   const navigate = useNavigate();
   const touchStartY = useRef(null);
+  const ready = useRef(false);
 
   useEffect(() => {
+    const timer = setTimeout(() => { ready.current = true; }, 500);
+
     const handleWheel = (e) => {
-      if (window.scrollY === 0 && e.deltaY < 0) {
+      if (ready.current && window.scrollY === 0 && e.deltaY < -30) {
         navigate('/');
       }
     };
@@ -31,7 +34,7 @@ function ProfilePage() {
     const handleTouchEnd = (e) => {
       if (touchStartY.current === null) return;
       const deltaY = touchStartY.current - e.changedTouches[0].clientY;
-      if (window.scrollY === 0 && deltaY < -30) {
+      if (ready.current && window.scrollY === 0 && deltaY < -30) {
         navigate('/');
       }
       touchStartY.current = null;
@@ -42,6 +45,7 @@ function ProfilePage() {
     window.addEventListener('touchend', handleTouchEnd);
 
     return () => {
+      clearTimeout(timer);
       window.removeEventListener('wheel', handleWheel);
       window.removeEventListener('touchstart', handleTouchStart);
       window.removeEventListener('touchend', handleTouchEnd);
@@ -63,7 +67,7 @@ function ProfilePage() {
     >
       {/* 스크롤 위로 유도 아이콘 */}
       <Box
-        onClick={() => document.getElementById('landing')?.scrollIntoView({ behavior: 'smooth' })}
+        onClick={() => navigate('/')}
         sx={{
           position: 'absolute',
           top: { xs: 20, md: 32 },
