@@ -29,9 +29,7 @@ function LoginPage() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-
-    // 현재 단계에서는 API 연결 대신 콘솔 출력만 수행
-    console.log('로그인 값:', formValues);
+    navigate('/');
   };
 
   return (
@@ -116,7 +114,7 @@ function LoginPage() {
                 variant="contained"
                 size="large"
                 fullWidth
-                onClick={() => console.log('카카오 로그인')}
+                onClick={() => navigate('/')}
                 sx={{
                   backgroundColor: '#FEE500',
                   color: '#191919',
@@ -135,7 +133,7 @@ function LoginPage() {
                 variant="outlined"
                 size="large"
                 fullWidth
-                onClick={() => console.log('구글 로그인')}
+                onClick={() => navigate('/')}
                 sx={{
                   borderColor: '#dadce0',
                   color: '#3c4043',
