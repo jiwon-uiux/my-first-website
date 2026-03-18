@@ -12,11 +12,12 @@ import CommentItem from './CommentItem';
  *
  * Props:
  * @param {Array} comments - 댓글 배열 [Required]
+ * @param {function} onAuthorClick - 닉네임 클릭 시 실행 함수 (author: string) => void [Optional]
  *
  * Example usage:
- * <CommentList comments={post.comments} />
+ * <CommentList comments={post.comments} onAuthorClick={(author) => setSelectedAuthor(author)} />
  */
-function CommentList({ comments }) {
+function CommentList({ comments, onAuthorClick }) {
   const [commentList, setCommentList] = useState(comments);
   const [newComment, setNewComment] = useState('');
 
@@ -108,13 +109,13 @@ function CommentList({ comments }) {
           {rootComments.map((comment) => (
             <Box key={comment.commentId}>
               {/* 댓글 */}
-              <CommentItem comment={comment} onReply={handleReply} />
+              <CommentItem comment={comment} onReply={handleReply} onAuthorClick={onAuthorClick} />
 
               {/* 대댓글 */}
               {getReplies(comment.commentId).length > 0 && (
                 <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, mt: 1 }}>
                   {getReplies(comment.commentId).map((reply) => (
-                    <CommentItem key={reply.commentId} comment={reply} isReply />
+                    <CommentItem key={reply.commentId} comment={reply} isReply onAuthorClick={onAuthorClick} />
                   ))}
                 </Box>
               )}

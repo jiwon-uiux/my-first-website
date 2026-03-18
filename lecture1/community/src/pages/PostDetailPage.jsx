@@ -15,6 +15,7 @@ import SpoilerToggle from '../components/ui/SpoilerToggle';
 import HashtagList from '../components/ui/HashtagList';
 import VoteSection from '../components/ui/VoteSection';
 import CommentList from '../components/ui/CommentList';
+import UserProfileDialog from '../components/ui/UserProfileDialog';
 import { MOCK_POSTS } from '../data/mockData';
 
 /**
@@ -26,6 +27,7 @@ function PostDetailPage() {
   const navigate = useNavigate();
   const { postId } = useParams();
   const [liked, setLiked] = useState(false);
+  const [selectedAuthor, setSelectedAuthor] = useState(null);
 
   /** URL의 postId로 게시물 데이터 찾기 */
   const post = MOCK_POSTS.find((p) => p.postId === Number(postId));
@@ -85,7 +87,14 @@ function PostDetailPage() {
           {/* 메타 + 좋아요 */}
           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1 }}>
             <Typography variant='caption' sx={{ color: '#B8C6DB', opacity: 0.7 }}>
-              {post.author} · {post.createdAt}
+              <Box
+                component='span'
+                onClick={() => setSelectedAuthor(post.author)}
+                sx={{ cursor: 'pointer', '&:hover': { color: '#F7F7F7', textDecoration: 'underline' } }}
+              >
+                {post.author}
+              </Box>
+              {' '}· {post.createdAt}
             </Typography>
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
               <IconButton onClick={() => setLiked(!liked)} size='small'>
@@ -137,7 +146,14 @@ function PostDetailPage() {
         )}
 
         {/* 댓글 */}
-        <CommentList comments={post.comments || []} />
+        <CommentList comments={post.comments || []} onAuthorClick={(author) => setSelectedAuthor(author)} />
+
+        {/* 유저 프로필 다이얼로그 */}
+        <UserProfileDialog
+          author={selectedAuthor}
+          isOpen={Boolean(selectedAuthor)}
+          onClose={() => setSelectedAuthor(null)}
+        />
       </Container>
     </Box>
   );

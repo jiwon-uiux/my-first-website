@@ -22,11 +22,12 @@ const EMOJI_OPTIONS = ['😂', '😍', '😱', '🔥', '👍', '😭', '🎬', '
  * @param {object} comment - 댓글 데이터 [Required]
  * @param {boolean} isReply - 대댓글 여부 [Optional, 기본값: false]
  * @param {function} onReply - 대댓글 작성 시 실행 함수 (parentId, content) => void [Optional]
+ * @param {function} onAuthorClick - 닉네임 클릭 시 실행 함수 (author: string) => void [Optional]
  *
  * Example usage:
- * <CommentItem comment={commentData} onReply={handleReply} />
+ * <CommentItem comment={commentData} onReply={handleReply} onAuthorClick={(author) => setSelectedAuthor(author)} />
  */
-function CommentItem({ comment, isReply = false, onReply }) {
+function CommentItem({ comment, isReply = false, onReply, onAuthorClick }) {
   const [liked, setLiked] = useState(false);
   const [showReplyInput, setShowReplyInput] = useState(false);
   const [replyText, setReplyText] = useState('');
@@ -62,7 +63,13 @@ function CommentItem({ comment, isReply = false, onReply }) {
       {/* 작성자 */}
       <Typography variant='caption' sx={{ color: '#B8C6DB', fontWeight: 600 }}>
         {comment.emoji && <span style={{ marginRight: 4 }}>{comment.emoji}</span>}
-        {comment.author}
+        <Box
+          component='span'
+          onClick={() => onAuthorClick?.(comment.author)}
+          sx={{ cursor: 'pointer', '&:hover': { color: '#F7F7F7', textDecoration: 'underline' } }}
+        >
+          {comment.author}
+        </Box>
       </Typography>
 
       {/* 댓글 내용 (스포일러 처리) */}
