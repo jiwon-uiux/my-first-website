@@ -12,10 +12,13 @@ import ScrollIndicator from '../components/common/ScrollIndicator';
 function LandingPage() {
   const navigate = useNavigate();
   const touchStartY = useRef(null);
+  const ready = useRef(false);
 
   useEffect(() => {
+    const timer = setTimeout(() => { ready.current = true; }, 500);
+
     const handleWheel = (e) => {
-      if (e.deltaY > 0) {
+      if (ready.current && e.deltaY > 30) {
         navigate('/profile');
       }
     };
@@ -27,7 +30,7 @@ function LandingPage() {
     const handleTouchEnd = (e) => {
       if (touchStartY.current === null) return;
       const deltaY = touchStartY.current - e.changedTouches[0].clientY;
-      if (deltaY > 30) {
+      if (ready.current && deltaY > 30) {
         navigate('/profile');
       }
       touchStartY.current = null;
@@ -38,6 +41,7 @@ function LandingPage() {
     window.addEventListener('touchend', handleTouchEnd);
 
     return () => {
+      clearTimeout(timer);
       window.removeEventListener('wheel', handleWheel);
       window.removeEventListener('touchstart', handleTouchStart);
       window.removeEventListener('touchend', handleTouchEnd);
