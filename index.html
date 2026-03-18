@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>김지원 | 웹퍼블리셔</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #EEF7FC, #B0DCF0);
+      padding: 20px;
+    }
+    .card {
+      background: rgba(255,255,255,0.7);
+      backdrop-filter: blur(16px);
+      border-radius: 24px;
+      padding: 48px 40px;
+      max-width: 480px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 16px 48px rgba(135,206,235,0.25);
+    }
+    .avatar {
+      width: 96px;
+      height: 96px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #87CEEB, #4A90D9);
+      margin: 0 auto 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 40px;
+    }
+    h1 { font-size: 2rem; color: #1A2B4A; margin-bottom: 8px; }
+    .role { color: #4A90D9; font-size: 1rem; margin-bottom: 20px; }
+    p { color: #555; line-height: 1.7; font-size: 0.95rem; margin-bottom: 28px; }
+    .btn {
+      display: inline-block;
+      padding: 12px 32px;
+      background: #4A90D9;
+      color: #fff;
+      border-radius: 50px;
+      text-decoration: none;
+      font-size: 0.9rem;
+      transition: background 0.2s;
+    }
+    .btn:hover { background: #2a70b9; }
+    @media (max-width: 480px) {
+      .card { padding: 36px 24px; }
+      h1 { font-size: 1.6rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="avatar">👋</div>
+    <h1>김지원</h1>
+    <div class="role">성장하는 웹퍼블리셔</div>
+    <p>안녕하세요! UI/UX에 관심이 많고<br>사용자 경험을 중요하게 생각하는<br>웹퍼블리셔 김지원입니다.</p>
+    <a class="btn" href="mailto:hello@example.com">연락하기</a>
+  </div>
+</body>
+</html>

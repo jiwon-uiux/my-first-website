@@ -45,11 +45,13 @@ jobs:
         run: npm run build
         working-directory: ./lecture1/community
 
-      # 두 빌드 결과물 합치기
+      # 빌드 결과물 합치기
       - name: Merge build outputs
         run: |
           mkdir -p ./dist
-          cp -r ./lecture1/my-react-app/dist/. ./dist/
+          cp ./index.html ./dist/index.html
+          mkdir -p ./dist/react-app
+          cp -r ./lecture1/my-react-app/dist/. ./dist/react-app/
           mkdir -p ./dist/community
           cp -r ./lecture1/community/dist/. ./dist/community/
 
