@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
@@ -10,19 +10,28 @@ import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import Chip from '@mui/material/Chip';
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import DialogActions from '@mui/material/DialogActions';
+import TextField from '@mui/material/TextField';
+import IconButton from '@mui/material/IconButton';
 import StarIcon from '@mui/icons-material/Star';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import EditIcon from '@mui/icons-material/Edit';
+import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import { MOCK_POSTS } from '../data/mockData';
 
-/** 임시 사용자 데이터 */
-const MOCK_USER = {
-  nickname: '달빛영화팬',
-  bio: '영화와 드라마를 사랑하는 밤의 관람자 🌙',
-  profileImageUrl: null,
-  joinDate: '2024-01-15',
-  postCount: 12,
-  friendCount: 34,
+const inputSx = {
+  '& .MuiOutlinedInput-root': {
+    backgroundColor: '#0C1E35',
+    color: '#F7F7F7',
+    '& fieldset': { borderColor: '#27496D' },
+    '&:hover fieldset': { borderColor: '#B8C6DB' },
+    '&.Mui-focused fieldset': { borderColor: '#B8C6DB' },
+  },
+  '& .MuiInputBase-input::placeholder': { color: '#B8C6DB', opacity: 0.5 },
+  '& .MuiInputLabel-root': { color: '#B8C6DB' },
 };
 
 /** 임시 별점 내역 */
@@ -39,9 +48,49 @@ const MOCK_RATINGS = [
 function ProfilePage() {
   const navigate = useNavigate();
   const [tab, setTab] = useState(0);
+  const [user, setUser] = useState({
+    nickname: '달빛영화팬',
+    bio: '영화와 드라마를 사랑하는 밤의 관람자 🌙',
+    profileImageUrl: null,
+    joinDate: '2024-01-15',
+    postCount: 12,
+    friendCount: 34,
+  });
+  const [isEditOpen, setIsEditOpen] = useState(false);
+  const [editNickname, setEditNickname] = useState('');
+  const [editBio, setEditBio] = useState('');
+  const [editImageUrl, setEditImageUrl] = useState(null);
+  const fileInputRef = useRef(null);
+
+  /** 편집 다이얼로그 열기 */
+  const handleEditOpen = () => {
+    setEditNickname(user.nickname);
+    setEditBio(user.bio);
+    setEditImageUrl(user.profileImageUrl);
+    setIsEditOpen(true);
+  };
+
+  /** 편집 저장 */
+  const handleEditSave = () => {
+    if (!editNickname.trim() || editNickname.trim().length < 2) return;
+    setUser((prev) => ({
+      ...prev,
+      nickname: editNickname.trim(),
+      bio: editBio.trim(),
+      profileImageUrl: editImageUrl,
+    }));
+    setIsEditOpen(false);
+  };
+
+  /** 프로필 이미지 변경 */
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    setEditImageUrl(URL.createObjectURL(file));
+  };
 
   /** 내가 쓴 게시물 (Mock: 달빛영화팬 작성 글) */
-  const myPosts = MOCK_POSTS.filter((p) => p.author === MOCK_USER.nickname);
+  const myPosts = MOCK_POSTS.filter((p) => p.author === user.nickname);
 
   return (
     <Box sx={{ width: '100%', minHeight: '100vh', backgroundColor: '#0C1E35' }}>
@@ -63,7 +112,7 @@ function ProfilePage() {
         >
           {/* 아바타 */}
           <Avatar
-            src={MOCK_USER.profileImageUrl || undefined}
+            src={user.profileImageUrl || undefined}
             sx={{
               width: 80, height: 80,
               backgroundColor: '#27496D',
@@ -71,18 +120,19 @@ function ProfilePage() {
               flexShrink: 0,
             }}
           >
-            {!MOCK_USER.profileImageUrl && MOCK_USER.nickname[0]}
+            {!user.profileImageUrl && user.nickname[0]}
           </Avatar>
 
           {/* 사용자 정보 */}
           <Box sx={{ flex: 1 }}>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 0.5 }}>
               <Typography variant='h6' sx={{ color: '#F7F7F7', fontWeight: 700 }}>
-                {MOCK_USER.nickname}
+                {user.nickname}
               </Typography>
               <Button
                 size='small'
                 startIcon={<EditIcon sx={{ fontSize: 14 }} />}
+                onClick={handleEditOpen}
                 sx={{ color: '#B8C6DB', fontSize: '0.75rem', p: '2px 8px', minWidth: 0 }}
               >
                 편집
@@ -90,14 +140,14 @@ function ProfilePage() {
             </Box>
 
             <Typography variant='body2' sx={{ color: '#B8C6DB', opacity: 0.8, mb: 1.5 }}>
-              {MOCK_USER.bio}
+              {user.bio}
             </Typography>
 
             {/* 통계 */}
             <Box sx={{ display: 'flex', gap: 3 }}>
               <Box sx={{ textAlign: 'center' }}>
                 <Typography variant='h6' sx={{ color: '#F7F7F7', fontWeight: 700, lineHeight: 1 }}>
-                  {MOCK_USER.postCount}
+                  {user.postCount}
                 </Typography>
                 <Typography variant='caption' sx={{ color: '#B8C6DB', opacity: 0.6 }}>게시물</Typography>
               </Box>
@@ -109,13 +159,102 @@ function ProfilePage() {
               </Box>
               <Box sx={{ textAlign: 'center' }}>
                 <Typography variant='h6' sx={{ color: '#F7F7F7', fontWeight: 700, lineHeight: 1 }}>
-                  {MOCK_USER.friendCount}
+                  {user.friendCount}
                 </Typography>
                 <Typography variant='caption' sx={{ color: '#B8C6DB', opacity: 0.6 }}>친구</Typography>
               </Box>
             </Box>
           </Box>
         </Box>
+
+        {/* 프로필 편집 다이얼로그 */}
+        <Dialog
+          open={isEditOpen}
+          onClose={() => setIsEditOpen(false)}
+          PaperProps={{
+            sx: {
+              backgroundColor: '#142850',
+              border: '1px solid #27496D',
+              borderRadius: 3,
+              minWidth: { xs: 300, sm: 420 },
+            },
+          }}
+        >
+          <DialogTitle sx={{ color: '#F7F7F7', fontWeight: 700, pb: 1 }}>
+            프로필 편집
+          </DialogTitle>
+          <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: 2.5, pt: '12px !important' }}>
+
+            {/* 프로필 이미지 */}
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+              <Avatar
+                src={editImageUrl || undefined}
+                sx={{ width: 64, height: 64, backgroundColor: '#27496D', fontSize: '1.5rem' }}
+              >
+                {!editImageUrl && editNickname[0]}
+              </Avatar>
+              <Button
+                component='label'
+                variant='outlined'
+                startIcon={<AddPhotoAlternateIcon />}
+                sx={{
+                  borderColor: '#27496D', color: '#B8C6DB', borderStyle: 'dashed',
+                  '&:hover': { borderColor: '#B8C6DB', backgroundColor: 'rgba(184,198,219,0.05)' },
+                }}
+              >
+                이미지 변경
+                <input ref={fileInputRef} type='file' hidden accept='image/*' onChange={handleImageChange} />
+              </Button>
+            </Box>
+
+            {/* 닉네임 */}
+            <TextField
+              fullWidth
+              label='닉네임'
+              value={editNickname}
+              onChange={(e) => setEditNickname(e.target.value)}
+              inputProps={{ maxLength: 12 }}
+              helperText={`${editNickname.length}/12`}
+              sx={inputSx}
+              FormHelperTextProps={{ sx: { color: '#B8C6DB', opacity: 0.6 } }}
+            />
+
+            {/* 소개글 */}
+            <TextField
+              fullWidth
+              label='소개글'
+              value={editBio}
+              onChange={(e) => setEditBio(e.target.value)}
+              multiline
+              rows={2}
+              inputProps={{ maxLength: 60 }}
+              helperText={`${editBio.length}/60`}
+              sx={inputSx}
+              FormHelperTextProps={{ sx: { color: '#B8C6DB', opacity: 0.6 } }}
+            />
+          </DialogContent>
+          <DialogActions sx={{ px: 3, pb: 2.5, gap: 1 }}>
+            <Button
+              onClick={() => setIsEditOpen(false)}
+              sx={{ color: '#B8C6DB', borderColor: '#27496D', '&:hover': { borderColor: '#B8C6DB' } }}
+              variant='outlined'
+            >
+              취소
+            </Button>
+            <Button
+              onClick={handleEditSave}
+              disabled={!editNickname.trim() || editNickname.trim().length < 2}
+              variant='contained'
+              sx={{
+                backgroundColor: '#B8C6DB', color: '#0C1E35', fontWeight: 700,
+                '&:hover': { backgroundColor: '#F7F7F7' },
+                '&:disabled': { backgroundColor: '#27496D', color: '#B8C6DB' },
+              }}
+            >
+              저장
+            </Button>
+          </DialogActions>
+        </Dialog>
 
         {/* 탭: 내가 쓴 글 / 별점 내역 */}
         <Tabs
