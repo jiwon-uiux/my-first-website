@@ -147,7 +147,7 @@ function ProfilePage() {
             <Box sx={{ display: 'flex', gap: 3 }}>
               <Box sx={{ textAlign: 'center' }}>
                 <Typography variant='h6' sx={{ color: '#F7F7F7', fontWeight: 700, lineHeight: 1 }}>
-                  {user.postCount}
+                  {myPosts.length}
                 </Typography>
                 <Typography variant='caption' sx={{ color: '#B8C6DB', opacity: 0.6 }}>게시물</Typography>
               </Box>
