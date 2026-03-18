@@ -1,23 +1,13 @@
-import Box from '@mui/material/Box';
+import { Routes, Route } from 'react-router-dom';
 import LandingPage from './pages/LandingPage';
 import ProfilePage from './pages/ProfilePage';
 
 function App() {
   return (
-    <Box
-      sx={{
-        height: '100vh',
-        overflowY: 'scroll',
-        scrollSnapType: 'y mandatory',
-      }}
-    >
-      <Box id='landing' sx={{ scrollSnapAlign: 'start', height: '100vh' }}>
-        <LandingPage />
-      </Box>
-      <Box id='profile' sx={{ scrollSnapAlign: 'start', height: '100vh' }}>
-        <ProfilePage />
-      </Box>
-    </Box>
+    <Routes>
+      <Route path='/' element={<LandingPage />} />
+      <Route path='/profile' element={<ProfilePage />} />
+    </Routes>
   );
 }
 
