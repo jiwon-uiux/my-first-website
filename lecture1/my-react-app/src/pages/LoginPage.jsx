@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Box,
   Button,
@@ -10,6 +11,7 @@ import {
 } from '@mui/material';
 
 function LoginPage() {
+  const navigate = useNavigate();
   const [formValues, setFormValues] = useState({
     email: '',
     password: '',
@@ -89,6 +91,15 @@ function LoginPage() {
                   fullWidth
                 >
                   로그인
+                </Button>
+
+                <Button
+                  variant="text"
+                  size="large"
+                  fullWidth
+                  onClick={() => navigate('/')}
+                >
+                  로그인 없이 계속하기
                 </Button>
               </Stack>
             </Box>
